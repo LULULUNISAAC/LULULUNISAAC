@@ -32,6 +32,9 @@ jobs:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             dist/snake.svg?color_snake=#ffffff&color_dots=#141414,#333333,#5e5e5e,#9a9a9a,#e8e8e8
+            
+      - name: Put the snake on a dark rounded card     
+        run: python build.py --snake 
 
       - name: Publish to the output branch
         run: |
