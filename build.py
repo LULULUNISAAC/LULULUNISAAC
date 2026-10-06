@@ -28,17 +28,6 @@ M = 6  # outer margin: gives every card its own rounded edge and a gap to its ne
 CSS = """
 text{font-family:%FONT%;fill:%FG%}
 .m{fill:%MUT%}.s{fill:%SOFT%}.d{fill:%DIM%}.k{fill:%INK%}.b{font-weight:700}
-.blink{animation:blink 1.1s steps(1) infinite}
-.sweep{animation:sweep 9s linear infinite}
-.fade{opacity:0;animation:fade .6s ease forwards}
-.grow{transform-box:fill-box;transform-origin:left center;transform:scaleX(0);animation:grow .7s cubic-bezier(.2,.8,.2,1) forwards}
-.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 2.2s ease-out infinite}
-@keyframes blink{50%{opacity:0}}
-@keyframes sweep{from{transform:translateX(0)}to{transform:translateX(1120px)}}
-@keyframes fade{to{opacity:1}}
-@keyframes grow{to{transform:scaleX(1)}}
-@keyframes pulse{from{transform:scale(1);opacity:.75}to{transform:scale(3.4);opacity:0}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;opacity:1!important;transform:none!important}}
 """.replace("%FONT%", FONT).replace("%FG%", FG).replace("%MUT%", MUT)\
    .replace("%SOFT%", SOFT).replace("%DIM%", DIM).replace("%INK%", INK)
 
@@ -63,10 +52,20 @@ def T(x, y, s, size=16, cls="", anchor="start", extra=""):
     c = f' class="{cls}"' if cls else ""
     return f'<text x="{x}" y="{y}" font-size="{size}"{a}{c} {extra}>{esc(s)}</text>'
 
-def R(x, y, w, h, fill="none", stroke="", extra="", rx=0):
+def R(x, y, w, h, fill="none", stroke="", extra="", rx=0, inner=""):
     st = f' stroke="{stroke}"' if stroke else ""
     r = f' rx="{rx}"' if rx else ""
-    return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{fill}"{st}{r} {extra}/>'
+    head = f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{fill}"{st}{r} {extra}'
+    return head + (f'>{inner}</rect>' if inner else '/>')
+
+def anim(attr, values, dur, kt="", extra=""):
+    k = f' keyTimes="{kt}"' if kt else ""
+    return f'<animate attributeName="{attr}" values="{values}"{k} dur="{dur}s" repeatCount="indefinite" {extra}/>'
+
+def intro(attr, final, delay, dur=0.6):
+    total = delay + dur
+    return (f'<animate attributeName="{attr}" values="0;0;{final}" keyTimes="0;{delay/total:.3f};1" '
+            f'dur="{total:.2f}s" fill="freeze"/>')
 
 def svg(w, h, body, css="", defs=""):
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}">'
@@ -153,20 +152,17 @@ def live_data(featured):
 def hero(L, D):
     w, h, ui = 1200, 430, L["ui"]
     defs = ('<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">'
-            '<circle cx="2" cy="2" r="1" fill="#1b1b1b"/></pattern>'
-            '<radialGradient id="glow" cx="85%" cy="0%" r="70%">'
-            '<stop offset="0" stop-color="#ffffff" stop-opacity=".09"/>'
-            '<stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>')
+            '<circle cx="2" cy="2" r="1" fill="#1b1b1b"/></pattern>')
     b = [card_bg(w, h, 26),
          R(M + 1, M + 1, w - 2 * M - 2, h - 2 * M - 2, "url(#dots)", rx=25),
-         R(M + 1, M + 1, w - 2 * M - 2, h - 2 * M - 2, "url(#glow)", rx=25),
          f'<line x1="{M}" y1="52" x2="{w-M}" y2="52" stroke="{LINE}"/>',
-         f'<circle cx="44" cy="31" r="4" fill="{SOFT}"/><circle cx="44" cy="31" r="4" fill="{SOFT}" class="pulse"/>',
+         f'<circle cx="44" cy="31" r="4" fill="{SOFT}"/>'
+         f'<circle cx="44" cy="31" r="4" fill="none" stroke="{SOFT}">{anim("r","4;13","2.2")}{anim("opacity",".8;0","2.2")}</circle>',
          T(60, 36, f"{USER.lower()}@github", 14, "m"),
          T(w - 40, 36, f'{ui["rendered"]} {dt.datetime.now(TZ).strftime("%Y-%m-%d %H:%M %Z")}', 14, "m", "end")]
     name = L["name"]
     b.append(T(40, 142, name, 64, "b"))
-    b.append(R(40 + tw(name, 64) + 18, 96, 26, 48, SOFT, extra='class="blink"', rx=4))
+    b.append(R(40 + tw(name, 64) + 18, 96, 26, 48, SOFT, rx=4, inner=anim("opacity","1;0;1","1.1","0;0.5;1",'calcMode="discrete"')))
     b.append(T(40, 184, L["role"], 20, "s", extra='letter-spacing="2"'))
     y = 240
     for lab, txt in L["rows"]:
@@ -183,10 +179,10 @@ def hero(L, D):
         b.append(f'<polygon points="{x0},{yb} {line} {x1},{yb}" fill="#171717"/>')
         b.append(f'<polyline points="{line}" fill="none" stroke="{FG}" stroke-width="1.6" stroke-linejoin="round"/>')
         b.append(f'<line x1="{x0}" y1="{yb}" x2="{x1}" y2="{yb}" stroke="{LINE}"/>')
-        b.append(R(x0, yb - ht - 8, 2, ht + 8, SOFT, extra='class="sweep"', rx=1))
+        b.append(R(x0, yb - ht - 8, 2, ht + 8, SOFT, rx=1, inner=f'<animate attributeName="x" from="{x0}" to="{x1}" dur="9s" repeatCount="indefinite"/>'))
         ex, ey = pts[-1]
         b.append(f'<circle cx="{ex:.1f}" cy="{ey:.1f}" r="4" fill="{FG}"/>'
-                 f'<circle cx="{ex:.1f}" cy="{ey:.1f}" r="4" fill="none" stroke="{FG}" class="pulse"/>')
+                 f'<circle cx="{ex:.1f}" cy="{ey:.1f}" r="4" fill="none" stroke="{FG}">{anim("r","4;14","2.2")}{anim("opacity",".8;0","2.2")}</circle>')
         total = sum(c for _, c in days)
         streak = 0
         for _, c in reversed(days[:-1] if days[-1][1] == 0 else days):
@@ -197,17 +193,11 @@ def hero(L, D):
     return svg(w, h, "".join(b), defs=defs)
 
 def ticker(L):
-    ui, w, h = L["ui"], 1200, 56
+    w, h = 1200, 56
     items = [t for t, _ in CFG["tools"]] + [r["repo"] for r in L["repos"]] + [L["rows"][-1][1]]
-    text = "   ·   ".join(items) + "   ·   "
-    tl = round(tw(text, 15))
-    css = f"@keyframes tick{{from{{transform:translateX(0)}}to{{transform:translateX(-{tl}px)}}}}.tick{{animation:tick 38s linear infinite}}"
-    clip = f'<clipPath id="c"><rect x="{M+14}" y="{M}" width="{w-2*M-28}" height="{h-2*M}"/></clipPath>'
-    g = (f'<g clip-path="url(#c)"><g class="tick">'
-         f'<text x="{M+20}" y="34" font-size="15" class="s" textLength="{tl}" lengthAdjust="spacing">{esc(text)}</text>'
-         f'<text x="{M+20+tl}" y="34" font-size="15" class="s" textLength="{tl}" lengthAdjust="spacing">{esc(text)}</text>'
-         f'</g></g>')
-    return svg(w, h, card_bg(w, h, 22) + g, css=css, defs=clip)
+    text = "  ·  ".join(items)
+    size = min(15, int(1080 / max(1, tw(text, 1))))
+    return svg(w, h, card_bg(w, h, 22) + T(w / 2, 34, text, size, "s", "middle"))
 
 def key(L, i, D):
     w, h = 400, 120
@@ -258,7 +248,7 @@ def lab(L):
         for j in range(5):
             on = j < lvl
             b.append(R(270 + j * 60, y - 15, 52, 14, FG if on else "#1a1a1a", rx=7,
-                       extra=f'class="grow" style="animation-delay:{(i*5+j)*0.06:.2f}s"' if on else ""))
+                       inner=intro("width", 52, (i * 5 + j) * 0.06) if on else ""))
     for i, r in enumerate(L["repos"]):
         y = 104 + i * 42
         b.append(T(704, y, r["repo"], 18))
@@ -282,9 +272,9 @@ def activity(L, D):
         for hr in range(24):
             v = grid[d][hr]
             lvl = 0 if v == 0 else min(4, 1 + int(3 * v / mx))
-            ex = f'class="fade" style="animation-delay:{(n%40)*0.03:.2f}s"' if v else ""
+            inn = intro("opacity", 1, (n % 40) * 0.03) if v else ""
             n += 1 if v else 0
-            b.append(R(x0 + hr * (cw_ + gap), y, cw_, ch_, RAMP[lvl], rx=7, extra=ex))
+            b.append(R(x0 + hr * (cw_ + gap), y, cw_, ch_, RAMP[lvl], rx=7, inner=inn))
     yl = y0 + 7 * (ch_ + gap) + 16
     for hr in range(0, 24, 3):
         b.append(T(x0 + hr * (cw_ + gap), yl, f"{hr:02d}", 12, "m"))
