@@ -1,0 +1,97 @@
+# ─────────────────────────────────────────────────────────────
+#  Your profile config. Edit text here, then run the workflow.
+#  Each language block renders its own set of SVG panels.
+# ─────────────────────────────────────────────────────────────
+github_user: LULULUNISAAC
+timezone: Asia/Hong_Kong
+accent: "#9a9a9a"          # soft grey highlight on black
+
+# Skill levels 1-5: set these to what you honestly claim
+tools:
+  - [PYTHON, 5]
+  - [SQL, 4]
+  - [JUPYTER · ML, 5]
+  - [TYPESCRIPT, 3]
+  - [C++, 3]
+
+languages:
+  en:
+    dir: en
+    name: ISAAC LWL
+    role: ML / DATA SCIENCE · HONG KONG
+    rows:
+      - [EDGE, "Building and scaling data pipelines"]
+      - [NOW,  "Building predictive ML models, turning insights into business strategy"]
+      - [OPEN, "Collaborations"]
+    keys:            # shown as clickable boxes. {followers} {repos} are filled in live
+      - { label: WEBSITE, sub: "lululunisaac.github.io" }
+      - { label: GITHUB,  sub: "{followers} FOLLOWERS · {repos} REPOS" }
+      - { label: EMAIL,   sub: "CLICK TO CONTACT" }
+    repos:           # first four are shown as cards
+      - { repo: ML_WORKS,    tag: ML,   pitch: "Predictive models in Jupyter, from raw data to insight", sub: "Python · notebooks · feature engineering" }
+      - { repo: cutemoney,   tag: APP,  pitch: "A simple money tracker to see where your spending goes",  sub: "JavaScript · runs in the browser" }
+      - { repo: File_Studio, tag: TOOL, pitch: "A small utility that makes everyday file work easier",    sub: "HTML · no install" }
+      - { repo: LIVECAPTION, tag: LIVE, pitch: "Real-time captions for live audio",                       sub: "REPLACE with your real stack or result" }
+    ui:
+      work: WORK
+      lab: LAB
+      flow: FLOW
+      tools: TOOLS
+      projects: SELECTED PROJECTS
+      contrib: CONTRIBUTIONS 12M
+      streak: STREAK
+      days: D
+      rendered: RENDERED
+      activity: PUSH ACTIVITY BY HOUR · LAST 90 DAYS · PUBLIC
+      peak: PEAK
+      less: LESS
+      more: MORE
+      recent: RECENTLY PUSHED
+      stars: STARS
+      forks: FORKS
+      updated: UPDATED
+      private: PRIVATE OR NOT AVAILABLE
+      weekdays: [MON, TUE, WED, THU, FRI, SAT, SUN]
+  zh:
+    dir: zh
+    name: ISAAC LWL
+    role: 機器學習 / 數據科學 · 香港
+    rows:
+      - [專長, "建構並擴展資料管線"]
+      - [現在, "打造預測型機器學習模型，將洞察轉化為商業策略"]
+      - [開放, "歡迎合作"]
+    keys:
+      - { label: 網站,   sub: "lululunisaac.github.io" }
+      - { label: GITHUB, sub: "{followers} 位追蹤者 · {repos} 個儲存庫" }
+      - { label: 電郵,   sub: "點擊聯絡我" }
+    repos:
+      - { repo: ML_WORKS,    tag: ML,   pitch: "以 Jupyter 建立預測模型，從原始數據到洞察", sub: "Python · Notebook · 特徵工程" }
+      - { repo: cutemoney,   tag: 應用, pitch: "簡單的記帳工具，看清錢花在哪裡",           sub: "JavaScript · 瀏覽器即用" }
+      - { repo: File_Studio, tag: 工具, pitch: "讓日常檔案處理更輕鬆的小工具",             sub: "HTML · 免安裝" }
+      - { repo: LIVECAPTION, tag: 即時, pitch: "即時語音字幕",                             sub: "請換成你的實際技術與成果" }
+    ui:
+      work: 作品
+      lab: 實驗室
+      flow: 動態
+      tools: 工具
+      projects: 精選專案
+      contrib: 近 12 個月貢獻
+      streak: 連續
+      days: 天
+      rendered: 更新於
+      activity: 每小時推送活動 · 近 90 天 · 公開
+      peak: 高峰
+      less: 少
+      more: 多
+      recent: 最近推送
+      stars: 星標
+      forks: 分支
+      updated: 更新
+      private: 私人或無法取得
+      weekdays: [週一, 週二, 週三, 週四, 週五, 週六, 週日]
+
+# Where the keys point (same order as `keys` above)
+links:
+  - https://lululunisaac.github.io/
+  - https://github.com/LULULUNISAAC
+  - https://lululunisaac.github.io/#contact     # button there builds the mailto link, so the address stays off GitHub
