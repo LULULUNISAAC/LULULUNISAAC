@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120"><style>
+text{font-family:ui-monospace,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","PingFang TC","Microsoft JhengHei","Noto Sans CJK TC",monospace;fill:#ffffff}
+.m{fill:#777777}.s{fill:#9a9a9a}.d{fill:#555555}.k{fill:#000000}.b{font-weight:700}
+</style><defs></defs><rect x="6.5" y="6.5" width="387" height="107" fill="#0a0a0a" stroke="#262626" rx="22" /><text x="30" y="40" font-size="13" class="m" >03</text><circle cx="358" cy="40" r="15" fill="none" stroke="#262626"/><text x="358" y="46" font-size="16" text-anchor="middle" class="s" >↗</text><text x="30" y="80" font-size="26" class="b" letter-spacing="2">電郵</text><text x="30" y="102" font-size="13" class="m" >點擊聯絡我</text></svg>
